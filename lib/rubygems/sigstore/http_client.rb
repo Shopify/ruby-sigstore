@@ -18,8 +18,7 @@ require "openssl"
 class HttpClient
     def initialize; end
     def get_cert(id_token, proof, pub_key, fulcio_host)
-        # rekor uses a self signed certificate which failes the ssl check
-        connection = Faraday.new(ssl: { verify: false }) do |request|
+        connection = Faraday.new do |request|
             request.authorization :Bearer, id_token.to_s
             request.url_prefix = fulcio_host
             request.request :json
@@ -30,7 +29,7 @@ class HttpClient
         return fulcio_response.body
     end
     def submit_rekor(pub_key, data_digest, data_signature, certPEM, data_raw, rekor_host)
-        # rekor uses a self signed certificate which failes the ssl check
+        # rekor uses a self signed certificate which fails the ssl check
         connection = Faraday.new(ssl: { verify: false }) do |request|
             # request.authorization :Bearer, id_token.to_s
             request.url_prefix = rekor_host
