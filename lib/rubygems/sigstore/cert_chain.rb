@@ -40,8 +40,9 @@ class Gem::Sigstore::CertChain
   end
 
   def retrieve_issuer_cert(cert)
-    issuer_cert_url = cert.authority_info_access.match(/http\S+/).to_s
-    raise "unsupported authorityInfoAccess value #{cert.authority_info_access}" if issuer_cert_url.empty?
+    aia = cert.extension("authorityInfoAccess")
+    issuer_cert_url = aia.match(/http\S+/).to_s
+    raise "unsupported authorityInfoAccess value #{aia}" if issuer_cert_url.empty?
 
     cert_pem = URI.open(issuer_cert_url).read
     issuer = OpenSSL::X509::Certificate.new(cert_pem)
