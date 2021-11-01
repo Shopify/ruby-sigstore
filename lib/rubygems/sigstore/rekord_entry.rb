@@ -18,7 +18,7 @@ class Gem::Sigstore::RekordEntry
   end
 
   def signer_email
-    subject_alt_name&.delete_prefix("email:")
+    cert_chain.signing_cert.subject_alt_name
   end
 
   def signer_public_key
@@ -37,10 +37,6 @@ class Gem::Sigstore::RekordEntry
       raise "Expecting a publicKey in #{body}" unless cert
       cert
     end
-  end
-
-  def subject_alt_name
-    cert_chain.signing_cert.extension("subjectAltName")
   end
 end
 

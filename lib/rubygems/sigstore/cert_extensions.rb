@@ -22,6 +22,10 @@ module Gem::Sigstore::CertExtensions
     issuer
   end
 
+  def subject_alt_name
+    extension("subjectAltName")&.delete_prefix("email:")
+  end
+
   private
 
   def extensions_hash
