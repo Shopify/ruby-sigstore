@@ -24,8 +24,8 @@ class Gem::Sigstore::CertChain
 
   def build_chain
     deserialize.tap do |chain|
-      while chain.first&.extension("authorityInfoAccess") do
-        chain.prepend(retrieve_issuer_cert(chain.first))
+      while chain.first&.issuing_certificate_uri do
+        chain.prepend(chain.first.issuing_certificate)
       end
     end
   end
@@ -37,16 +37,5 @@ class Gem::Sigstore::CertChain
       cert.extend(Gem::Sigstore::CertExtensions)
       cert
     end
-  end
-
-  def retrieve_issuer_cert(cert)
-    aia = cert.extension("authorityInfoAccess")
-    issuer_cert_url = aia.match(/http\S+/).to_s
-    raise "unsupported authorityInfoAccess value #{aia}" if issuer_cert_url.empty?
-
-    cert_pem = URI.open(issuer_cert_url).read
-    issuer = OpenSSL::X509::Certificate.new(cert_pem)
-    issuer.extend(Gem::Sigstore::CertExtensions)
-    issuer
   end
 end
