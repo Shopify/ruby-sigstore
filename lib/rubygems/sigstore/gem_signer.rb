@@ -3,14 +3,20 @@ class Gem::Sigstore::GemSigner
 
   Data = Struct.new(:digest, :signature, :raw)
 
-  def initialize(gemfile:, config:)
+  def initialize(gemfile:, config:, token: nil)
     @gemfile = gemfile
     @config = config
+    @token = token
   end
 
   def run
     pkey = Gem::Sigstore::PKey.new
-    cert = Gem::Sigstore::CertProvider.new(config: config, pkey: pkey).run
+    oidp = if token
+             Gem::Sigstore::OpenID::Dynamic.new(pkey.private_key, token)
+           else
+             Gem::Sigstore::OpenID::Static.new(pkey.private_key)
+           end
+    cert = Gem::Sigstore::CertProvider.new(config: config, pkey: pkey, oidp: oidp).run
 
     yield if block_given?
 

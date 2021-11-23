@@ -36,6 +36,11 @@ require "socket"
 class Gem::Commands::SignCommand < Gem::Command
   def initialize
     super "sign", "Sign a gem"
+
+    add_option("--identity-token", String,
+               "Provide a static token for automated environments") do |value, options|
+      options[:identity_token] = value
+    end
   end
 
   def arguments # :nodoc:
@@ -54,7 +59,8 @@ class Gem::Commands::SignCommand < Gem::Command
     gemfile = Gem::Sigstore::Gemfile.new(get_one_gem_name)
     rekor_entry = Gem::Sigstore::GemSigner.new(
       gemfile: gemfile,
-      config: Gem::Sigstore::Config.read
+      config: Gem::Sigstore::Config.read,
+      token: options[:identity_token]
     ).run
     say log_entry_url(rekor_entry)
   end
