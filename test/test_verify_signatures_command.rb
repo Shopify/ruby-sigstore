@@ -1,14 +1,14 @@
 require 'helper'
-require "rubygems/commands/verify_command"
+require "rubygems/commands/verify_signatures_command"
 
-class TestVerifyCommand < Gem::TestCase
+class TestVerifySignaturesCommand < Gem::TestCase
   include RekorHelper
 
   def setup
     super
 
     @gem_path = gem_path("hello-world.gem")
-    @cmd = Gem::Commands::VerifyCommand.new
+    @cmd = Gem::Commands::VerifySignaturesCommand.new
 
     stub_rekor_search_index_by_digest
     stub_rekor_get_rekords_by_uuid

@@ -15,11 +15,11 @@
 require 'rubygems/command'
 require 'rubygems/sigstore'
 
-class Gem::Commands::VerifyCommand < Gem::Command
+class Gem::Commands::VerifySignaturesCommand < Gem::Command
   def initialize
-    super 'verify', "Opens the gem's documentation"
-    add_option('--rekor-host HOST', 'Rekor host') do |value, options|
-      options[:host] = value
+    super 'verify_signatures', "Verifies whether a gem has been signed via sigstore."
+    add_option('--rekor-host HOST', 'Rekor host (not implemented)') do |value, options|
+      options[:rekor_host] = value
     end
   end
 
