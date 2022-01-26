@@ -4,6 +4,8 @@
 
 > :information_source: This is a temporary fork of [sigstore/ruby-sigstore](https://github.com/sigstore/ruby-sigstore). This version abandons the [existing gem signing flow](https://ruby-doc.org/stdlib-3.0.3/libdoc/rubygems/rdoc/Gem/Security.html) in favor of a keyless gem signature that we store in the [Rekor](https://docs.sigstore.dev/rekor/overview) transparency log.
 
+[go to identity tokens](#identity-tokens)
+
 This rubygems plugin enables both developers to sign gem files and users to verify the origin
 of a gem. It wraps around the main gem command to allow a level of seamless integration with
 gem build and install operations.
